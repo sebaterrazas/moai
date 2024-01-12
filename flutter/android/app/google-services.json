@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "576493301749",
+    "project_id": "moai-marauders",
+    "storage_bucket": "moai-marauders.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576493301749:android:18af7f29fc87d7b949babc",
+        "android_client_info": {
+          "package_name": "com.example.moai_marauders"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "REPLACE_FOR_API_KEY_ANDROID"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

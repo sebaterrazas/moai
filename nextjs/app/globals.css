@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 200 20% 98%;
+    --btn-background: 200 10% 91%;
+    --btn-background-hover: 200 10% 89%;
+    --foreground: 0, 47%, 3%;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: 0, 0%, 14%;
+      --btn-background: 200 10% 9%;
+      --btn-background-hover: 200 10% 12%;
+      --foreground: 200 20% 96%;
+    }
+  }
+}
+
+/* @layer base {
+  :root {
+    --background: hsl(200 20% 98%);
+    --btn-background: hsl(200 10% 91%);
+    --btn-background-hover: hsl(200 10% 89%);
+    --foreground: hsl(0, 47%, 3%);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: hsl(0, 0%, 14%);
+      --btn-background: hsl(200 10% 9%);
+      --btn-background-hover: hsl(200 10% 12%);
+      --foreground: hsl(200 20% 96%);
+    }
+  }
+} */
+
+/* @layer base {
+  * {
+    @apply border-foreground/20;
+  }
+} */
+
+.animate-in {
+  animation: animateIn 0.3s ease 0.15s both;
+}
+
+@keyframes animateIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+textarea:focus, input:focus{
+  outline: none;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
