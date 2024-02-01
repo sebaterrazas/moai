@@ -47,12 +47,24 @@ export async function uploadMedia(data: any) {
     const {
         data: { user },
     } = await supabase.auth.getUser();
-    console.log(user);
     const user_id = user?.id;
     if (!user_id) throw new Error('User not found');
-    const { data: media, error } = await supabase.from(user_id).insert(data);
+    const path = `${user_id}/${data.get('filename')}`;
+    const { data: media, error } = await supabase.storage.from('galery').upload(path, data.get('file'));
     if (error) throw error;
-    return media;
+    const isoDateString = new Date(data.get('datetime')).toISOString();
+    const { data: insert, error: insertError } = await supabase.from('galery').insert([
+        {
+            uploaded_by: user_id,
+            lat: data.get('lat'),
+            lon: data.get('lon'),
+            location: data.get('location'),
+            datetime: isoDateString,
+            filename: data.get('filename'),
+        }
+    ]);
+    if (insertError) throw insertError;
+    return 'Succesfully uploaded media';
 }
 
 // Map functions
@@ -81,8 +93,8 @@ export async function getLocation(latCoordinates: number, lonCoordinates: number
                 'Content-Type': 'application/json',
             },
         });
-        const location = await response.json()
-        return JSON.stringify(location);
+        const location = (await response.json()).display_name;
+        return location;
     } catch (error) {
         console.error(error);
         return '';

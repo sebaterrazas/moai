@@ -10,6 +10,7 @@ export default function UploadFile() {
   const [dragActive, setDragActive] = useState<boolean>(false);
   const inputRef = useRef<any>(null);
   const [files, setFiles] = useState<any>([]);
+  const [uploadMsg, setUploadMsg] = useState<string>("");
 
   async function handleChange(e: any) {
     e.preventDefault();
@@ -51,10 +52,16 @@ export default function UploadFile() {
         data.append("lat", file.latitude);
         data.append("lon", file.longitude);
         data.append("location", file.location);
-        data.append("datetime", file.gps);
+        data.append("datetime", file.datetime);
+        data.append("file", file.file);
         await uploadMedia(data);
       });
       setFiles([]);
+      setUploadMsg("Files uploaded successfully");
+      setTimeout(() => {
+        setUploadMsg("");
+      }
+      , 3000);
     }
     catch (error) {
       console.error(error)
@@ -174,6 +181,9 @@ export default function UploadFile() {
             <span className="p-2">Submit</span>
           </button>
         )}
+        <div className="flex flex-col items-center p-3">
+          {uploadMsg && <span>{uploadMsg}</span>}
+        </div>
     </form>
   );
 }
