@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { FaXmark } from "react-icons/fa6";
 import exifr from 'exifr'
-import { getLocation } from "@/lib/actions";
+import { getLocation, uploadMedia } from "@/lib/actions";
 
 export default function UploadFile() {
   const [dragActive, setDragActive] = useState<boolean>(false);
@@ -18,19 +18,23 @@ export default function UploadFile() {
       for (let i = 0; i < e.target.files["length"]; i++) {
         let latitude: any = null
         let longitude: any = null
+        let datetime: any = null
         let location: any = null
         try {
-          let res = await exifr.gps(e.target.files[i]);
+          let res = await exifr.parse(e.target.files[i]);
           latitude = res.latitude
           longitude = res.longitude
+          datetime = res.DateTimeOriginal
           location = await getLocation(latitude, longitude)
         }
         finally {
           newFiles.push({
-            file: e.target.files[i],
+            name: e.target.files[i].name,
             latitude: latitude,
             longitude: longitude,
-            gps: location
+            location: location,
+            datetime: datetime,
+            file: e.target.files[i]
           });
         }
       }
@@ -39,10 +43,21 @@ export default function UploadFile() {
   }
 
   function handleSubmitFile(e: any) {
-    if (files.length === 0) {
-      // no file has been submitted
-    } else {
-      // write submit logic here
+    try{
+      e.preventDefault();
+      files.forEach(async (file: any) => {
+        const data = new FormData();
+        data.append("filename", file.name);
+        data.append("lat", file.latitude);
+        data.append("lon", file.longitude);
+        data.append("location", file.location);
+        data.append("datetime", file.gps);
+        await uploadMedia(data);
+      });
+      setFiles([]);
+    }
+    catch (error) {
+      console.error(error)
     }
   }
 
@@ -118,13 +133,13 @@ export default function UploadFile() {
       </Link>
 
       <div className="w-1/2">
-        <label className={"flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-btn-background-hover " + (dragActive ? "bg-btn-background-hover" : "bg-btn-background")}>
+        <label className={"flex flex-col items-center justify-center w-full h-64 p-3 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer hover:bg-btn-background-hover " + (dragActive ? "bg-btn-background-hover" : "bg-btn-background")}>
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
               <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
             </svg>
             <p className="text-center mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-            <p className="text-center text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+            <p className="text-center text-xs text-gray-500 dark:text-gray-400">Images or Videos (MAX. 800x400px)</p>
           </div>
           <input
             placeholder="fileInput"

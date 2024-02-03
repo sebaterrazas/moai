@@ -1,24 +1,9 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
-export default async function AuthButton() {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+import { signOut } from "@/lib/actions";
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const signOut = async () => {
-    "use server";
-
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    await supabase.auth.signOut();
-    return redirect("/login");
-  };
+export default function AuthButton({user} : {user?: any}) {
 
   return user ? (
     <div className="flex items-center gap-4">

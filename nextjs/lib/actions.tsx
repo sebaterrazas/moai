@@ -2,7 +2,10 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
+import { redirect } from "next/navigation";
 import * as turf from '@turf/turf'
+
+// Media functions
 
 export async function getMedia(query: string) {
     try {
@@ -10,6 +13,9 @@ export async function getMedia(query: string) {
         if (geojsonString === '') return [];
         const cookieStore = cookies()
         const supabase = createClient(cookieStore);
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
         const geojsonJson = JSON.parse(geojsonString);
         if (geojsonJson.type === 'Point') {
             const boundaries: number[] = geojsonJson.boundaries.map(parseFloat);
@@ -34,6 +40,22 @@ export async function getMedia(query: string) {
         return [];
     }
 }
+
+export async function uploadMedia(data: any) {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    console.log(user);
+    const user_id = user?.id;
+    if (!user_id) throw new Error('User not found');
+    const { data: media, error } = await supabase.from(user_id).insert(data);
+    if (error) throw error;
+    return media;
+}
+
+// Map functions
 
 export async function getBoundaries(query: string): Promise<string> {
     const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&polygon_geojson=1&q=${query}`;
@@ -65,4 +87,23 @@ export async function getLocation(latCoordinates: number, lonCoordinates: number
         console.error(error);
         return '';
     }
+}
+
+// User functions
+
+export const signOut = async () => {
+    "use server";
+
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    await supabase.auth.signOut();
+    return redirect("/login");
+};
+
+export const getUser = async () => {
+    const supabase = createClient(cookies());
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    return user;
 }
