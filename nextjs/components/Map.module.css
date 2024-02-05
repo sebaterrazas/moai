@@ -28,3 +28,11 @@
 .popupWebUrl:focus {
 	outline: 0;
 }
+
+/* MapPhoto */
+
+.photoContainer {
+	display: flex;
+	flex-direction: column;
+	background-color: white;
+}

@@ -7,23 +7,42 @@ import * as turf from '@turf/turf'
 
 // Media functions
 
+/* export async function getMedia(query: string) {
+    const mediaData = await getMediaData(query);
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    const user_id = user?.id;
+    if (!user_id) throw new Error('User not found');
+    const result = mediaData.map((item: any) => {
+        const path = `${user_id}/${item.filename}`;
+        const { data: media } = supabase.storage.from('gallery').getPublicUrl(path);
+        return { ...media, ...item };
+    });
+    console.log('res', result)
+    return result
+} */
+
 export async function getMedia(query: string) {
     try {
-        const geojsonString = await getBoundaries(query);
-        if (geojsonString === '') return [];
         const cookieStore = cookies()
         const supabase = createClient(cookieStore);
-        const {
-            data: { user },
-        } = await supabase.auth.getUser();
+        if (query === '') {
+            const { data: media, error } = await supabase.from("gallery").select()
+            if (error) throw error;
+            return media
+        };
+        const geojsonString = await getBoundaries(query);
         const geojsonJson = JSON.parse(geojsonString);
         if (geojsonJson.type === 'Point') {
             const boundaries: number[] = geojsonJson.boundaries.map(parseFloat);
-            const { data: media, error } = await supabase.from("test").select().gte('lat', boundaries[0]).lte('lat', boundaries[1]).gte('lon', boundaries[2]).lte('lon', boundaries[3]);
+            const { data: media, error } = await supabase.from("gallery").select().gte('lat', boundaries[0]).lte('lat', boundaries[1]).gte('lon', boundaries[2]).lte('lon', boundaries[3]);
             if (error) throw error;
             return media;
         }
-        const { data: media, error } = await supabase.from("test").select()
+        const { data: media, error } = await supabase.from("gallery").select()
         if (error) throw error;
         var poly: any;
         if (geojsonJson.type === 'Polygon') {
@@ -50,10 +69,11 @@ export async function uploadMedia(data: any) {
     const user_id = user?.id;
     if (!user_id) throw new Error('User not found');
     const path = `${user_id}/${data.get('filename')}`;
-    const { data: media, error } = await supabase.storage.from('galery').upload(path, data.get('file'));
+    const { data: media2, error } = await supabase.storage.from('gallery').upload(path, data.get('file'));
     if (error) throw error;
+    const { data: media } = supabase.storage.from('gallery').getPublicUrl(path);
     const isoDateString = new Date(data.get('datetime')).toISOString();
-    const { data: insert, error: insertError } = await supabase.from('galery').insert([
+    const { data: insert, error: insertError } = await supabase.from('gallery').insert([
         {
             uploaded_by: user_id,
             lat: data.get('lat'),
@@ -61,6 +81,7 @@ export async function uploadMedia(data: any) {
             location: data.get('location'),
             datetime: isoDateString,
             filename: data.get('filename'),
+            publicUrl: media.publicUrl,
         }
     ]);
     if (insertError) throw insertError;
@@ -105,7 +126,6 @@ export async function getLocation(latCoordinates: number, lonCoordinates: number
 
 export const signOut = async () => {
     "use server";
-
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     await supabase.auth.signOut();
