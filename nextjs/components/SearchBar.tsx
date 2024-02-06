@@ -17,7 +17,7 @@ export const SearchBar = ({ term }: { term?: string }) => {
     <form onSubmit={(e) => e.preventDefault()}>
       <div className="relative max-w-4xl mx-auto">
         <MagnifyingGlass
-          className="absolute top-4 left-4 w-5 h-5 text-gray-400 pointer-events-none"
+          className="absolute top-4 left-4 w-5 h-5 text-gray-600 pointer-events-none"
           aria-hidden
         />
         <input
@@ -25,7 +25,7 @@ export const SearchBar = ({ term }: { term?: string }) => {
           name="searchField"
           defaultValue={typeof term === 'string' ? decodeURI(term) : ''}
           autoComplete="off"
-          className="block w-full p-4 pl-10 text-sm text-text/20 placeholder-gray-400 border rounded-2xl bg-foreground/5 focus:border"
+          className="block w-full p-4 pl-10 text-sm text-gray-600 placeholder-gray-400 border rounded-2xl focus:border"
           onChange={(evt) => handleSearch(evt.target.value)}
         />
       </div>

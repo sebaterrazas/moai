@@ -1,4 +1,4 @@
-# Moai Marauders
+# Moais Marauders
 
 WIP
 
