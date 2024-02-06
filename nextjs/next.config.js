@@ -22,6 +22,7 @@ const nextConfig = {
         },
       ],
     },
+    transpilePackages: ['html-to-text'],
   }
 
 module.exports = nextConfig;

@@ -3,7 +3,9 @@
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { redirect } from "next/navigation";
-import * as turf from '@turf/turf'
+import { point, polygon, multiPolygon } from '@turf/helpers';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+
 
 // Media functions
 
@@ -46,13 +48,13 @@ export async function getMedia(query: string) {
         if (error) throw error;
         var poly: any;
         if (geojsonJson.type === 'Polygon') {
-            poly = turf.polygon(geojsonJson.polygon);
+            poly = polygon(geojsonJson.polygon);
         } else if (geojsonJson.type === 'MultiPolygon') {
-            poly = turf.multiPolygon(geojsonJson.polygon);
+            poly = multiPolygon(geojsonJson.polygon);
         }
         return media.filter((item) => {
-            const pt = turf.point([item.lon, item.lat]);
-            return turf.booleanPointInPolygon(pt, poly);
+            const pt = point([item.lon, item.lat]);
+            return booleanPointInPolygon(pt, poly);
         });
     }
     catch (error) {
