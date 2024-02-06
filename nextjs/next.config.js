@@ -21,8 +21,7 @@ const nextConfig = {
           pathname: '/storage/**',
         },
       ],
-    },
-    transpilePackages: ['html-to-text'],
+    }
   }
 
 module.exports = nextConfig;
