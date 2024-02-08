@@ -136,8 +136,11 @@ export const signOut = async () => {
 
 export const getUser = async () => {
     const supabase = createClient(cookies());
+    const authTokenString = cookies().get('sb-aeoqsmyjxtzvkbvuhfaw-auth-token')?.value;
+    if (!authTokenString) return null;
+    const authToken = JSON.parse(authTokenString)[0];
     const {
         data: { user },
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser(authToken);
     return user;
 }

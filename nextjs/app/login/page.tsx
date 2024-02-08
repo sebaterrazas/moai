@@ -1,7 +1,7 @@
 import Link from "next/link";
-/* import { headers, cookies } from "next/headers";
+import { headers, cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation"; */
+import { redirect } from "next/navigation";
 
 import { getURL } from '@/utils/helpers';
 
@@ -12,7 +12,7 @@ export default function Login({
 }: {
   searchParams: { message: string };
 }) {
-  /* const signIn = async (formData: FormData) => {
+  const signIn = async (formData: FormData) => {
     "use server";
 
     const email = formData.get("email") as string;
@@ -62,25 +62,22 @@ export default function Login({
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
-    console.log("signing in with google...");
-
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         queryParams: {
           access_type: 'offline',
-          prompt: 'consent',
         },
+        redirectTo: '/auth/callback',
       },
     })
-
-    console.log(data, error);
     
     if (error) {
       return redirect("/login?message=Could not authenticate user");
     }
+
     return redirect(data.url);
-  }; */
+  };
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
@@ -104,7 +101,7 @@ export default function Login({
         </svg>{" "}
         Back
       </Link>
-      {/* <form
+      <form
         className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
         action={signIn}
       >
@@ -151,8 +148,8 @@ export default function Login({
             {searchParams.message}
           </p>
         )}
-      </form> */}
-      <AuthUI />
+      </form>
+     {/*  <AuthUI /> */}
     </div>
   );
 }

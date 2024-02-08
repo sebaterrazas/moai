@@ -24,11 +24,12 @@ export default async function Index({
 
   return (
     <div className="flex-1 w-full flex flex-row">
-      <Navbar user={user}/>
-
       <div className="animate-in flex-1 flex opacity-0">
         <main className="flex-1 flex">
           <MapComponent gallery={gallery} />
+          <div className="absolute top-0 left-0">
+            <Navbar user={user} />
+          </div>
           <div className="absolute top-0 right-0 p-3">
             <SearchBar term={query} />
           </div>
