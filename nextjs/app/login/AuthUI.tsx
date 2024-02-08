@@ -12,8 +12,11 @@ export default function AuthUI() {
       <Auth
         supabaseClient={supabase}
         providers={['google']}
-        redirectTo={`${getURL()}/auth/callback`}
         magicLink={true}
+        queryParams={{
+            access_type: 'offline',
+            prompt: 'consent',
+        }}
         appearance={{
           theme: ThemeSupa,
           variables: {
@@ -25,7 +28,7 @@ export default function AuthUI() {
             }
           }
         }}
-        theme="dark"
+        theme=""
       />
     </div>
   );
