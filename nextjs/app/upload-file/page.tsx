@@ -23,6 +23,7 @@ export default function UploadFile() {
         let location: any = null
         try {
           let res = await exifr.parse(e.target.files[i]);
+          console.log('res', res)
           latitude = res.latitude
           longitude = res.longitude
           datetime = res.DateTimeOriginal
@@ -37,6 +38,7 @@ export default function UploadFile() {
             datetime: datetime,
             file: e.target.files[i]
           });
+          console.log('newFiles', newFiles)
         }
       }
       setFiles((prevState: any[]) => [...prevState, ...newFiles]);
@@ -155,7 +157,7 @@ export default function UploadFile() {
             type="file"
             multiple={true}
             onChange={handleChange}
-            accept="image/*, video/*"
+            /* accept="image/*, video/*" */ /* Commented out because it caused problems with Android Web */
           />
         </label>
       </div>

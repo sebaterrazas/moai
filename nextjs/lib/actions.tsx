@@ -65,18 +65,24 @@ export async function getMedia(query: string) {
 
 export async function uploadMedia(data: any) {
     "use server";
+
+    console.log('data', data)
+
+    if (!data.get('filename')) throw new Error('Filename not found');
+    if (!data.get('lat')) throw new Error('Latitude not found');
+    if (!data.get('lon')) throw new Error('Longitude not found');
+    if (!data.get('location')) throw new Error('Location not found');
+    if (!data.get('datetime')) throw new Error('Datetime not found');
+    if (!data.get('file')) throw new Error('File not found');
+
     const cookieStore = cookies();
     const supabase = createServerComponentClient({ cookies: () => cookieStore });
-    const authTokenString = cookieStore.get('sb-aeoqsmyjxtzvkbvuhfaw-auth-token')?.value;
-    if (!authTokenString) return null;
-    const authToken = JSON.parse(authTokenString)[0];
     const {
         data: { user },
-    } = await supabase.auth.getUser(authToken);
+    } = await supabase.auth.getUser();
     const user_id = user?.id;
     if (!user_id) throw new Error('User not found');
     const path = `${user_id}/${data.get('filename')}`;
-    console.log('path', path)
     const { data: media2, error } = await supabase.storage.from('gallery').upload(path, data.get('file'));
     if (error) throw error;
     const { data: media } = supabase.storage.from('gallery').getPublicUrl(path);
