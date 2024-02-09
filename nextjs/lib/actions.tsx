@@ -66,14 +66,7 @@ export async function getMedia(query: string) {
 export async function uploadMedia(data: any) {
     "use server";
 
-    console.log('data', data)
-
-    if (!data.get('filename')) throw new Error('Filename not found');
-    if (!data.get('lat')) throw new Error('Latitude not found');
-    if (!data.get('lon')) throw new Error('Longitude not found');
-    if (!data.get('location')) throw new Error('Location not found');
-    if (!data.get('datetime')) throw new Error('Datetime not found');
-    if (!data.get('file')) throw new Error('File not found');
+    if (data.get('lat') == 'NaN' || data.get('lon') == 'NaN') throw new Error('GPS not found');
 
     const cookieStore = cookies();
     const supabase = createServerComponentClient({ cookies: () => cookieStore });
