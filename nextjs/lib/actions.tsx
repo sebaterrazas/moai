@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { redirect } from "next/navigation";
 import { point, polygon, multiPolygon } from '@turf/helpers';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 
 
 // Media functions
@@ -63,14 +64,19 @@ export async function getMedia(query: string) {
 }
 
 export async function uploadMedia(data: any) {
+    "use server";
     const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createServerComponentClient({ cookies: () => cookieStore });
+    const authTokenString = cookieStore.get('sb-aeoqsmyjxtzvkbvuhfaw-auth-token')?.value;
+    if (!authTokenString) return null;
+    const authToken = JSON.parse(authTokenString)[0];
     const {
         data: { user },
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser(authToken);
     const user_id = user?.id;
     if (!user_id) throw new Error('User not found');
     const path = `${user_id}/${data.get('filename')}`;
+    console.log('path', path)
     const { data: media2, error } = await supabase.storage.from('gallery').upload(path, data.get('file'));
     if (error) throw error;
     const { data: media } = supabase.storage.from('gallery').getPublicUrl(path);
@@ -135,12 +141,11 @@ export const signOut = async () => {
 };
 
 export const getUser = async () => {
-    const supabase = createClient(cookies());
-    const authTokenString = cookies().get('sb-aeoqsmyjxtzvkbvuhfaw-auth-token')?.value;
-    if (!authTokenString) return null;
-    const authToken = JSON.parse(authTokenString)[0];
+    "use server";
+    const cookieStore = cookies();
+    const supabase = createServerComponentClient({ cookies: () => cookieStore });
     const {
         data: { user },
-    } = await supabase.auth.getUser(authToken);
+    } = await supabase.auth.getUser();
     return user;
 }

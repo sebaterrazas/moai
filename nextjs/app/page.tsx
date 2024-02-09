@@ -10,6 +10,7 @@ import { Navbar } from "@/components/Navbar";
 import { SearchBar } from "@/components/SearchBar";
 import { MapComponent } from "@/components/Map";
 import { getUser, getMedia } from "@/lib/actions";
+import Avatar from "@/components/Avatar";
 
 
 export default async function Index({
@@ -27,11 +28,10 @@ export default async function Index({
       <div className="animate-in flex-1 flex opacity-0">
         <main className="flex-1 flex">
           <MapComponent gallery={gallery} />
-          <div className="absolute top-0 left-0">
+          <div className="absolute top-0 left-0 p-3 w-full flex flex-row justify-between">
             <Navbar user={user} />
-          </div>
-          <div className="absolute top-0 right-0 p-3">
             <SearchBar term={query} />
+            <Avatar user={user} />
           </div>
         </main>
       </div>

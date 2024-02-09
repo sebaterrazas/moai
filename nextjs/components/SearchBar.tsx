@@ -14,8 +14,8 @@ export const SearchBar = ({ term }: { term?: string }) => {
     push(`/?${params.toString()}`)
   }, 500)
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <div className="relative max-w-4xl mx-auto">
+    <form onSubmit={(e) => e.preventDefault()} className="flex-1 px-2">
+      <div className="relative max-w-xl mx-auto">
         <MagnifyingGlass
           className="absolute top-4 left-4 w-5 h-5 text-gray-600 pointer-events-none"
           aria-hidden

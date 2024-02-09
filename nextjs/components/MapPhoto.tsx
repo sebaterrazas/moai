@@ -13,7 +13,7 @@ export const MapPhoto = ({ media, zoom, rotation }: { media: any, zoom: number, 
     const [isLoading, setLoading] = useState(true);
 
     return (
-    <a href="#" className={classes.photoContainer} style={{ transform: `rotate(${rotation}deg)` }}>
+    <a href="#" className={classes.photoContainer} style={{ transform: `rotate(${rotation}deg)`, transition: 'transform 0.3s ease-in-out' }}>
         <div className="bg-gray-200 overflow-hidden" style={{ marginTop: `${zoom}px`, marginLeft: `${zoom}px`, marginRight: `${zoom}px`, width: `${10 * zoom}px`, height: `${10 * zoom}px`, position: "relative" }}>
           {isLoading && (
             <div
