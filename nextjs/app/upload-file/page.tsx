@@ -67,7 +67,8 @@ export default function UploadFile() {
       , 3000);
     }
     catch (error) {
-      console.error(error)
+      console.error(error);
+      setUploadMsg("Error uploading files");
     }
   }
 
