@@ -86,7 +86,7 @@ export async function uploadMedia(data: any) {
     const isoDateString = new Date(data.get('datetime')).toISOString();
     const { data: insert, error: insertError } = await supabase.from('gallery').insert([
         {
-            uploaded_by: user_id,
+            user_id: user_id,
             lat: data.get('lat'),
             lon: data.get('lon'),
             location: data.get('location'),
