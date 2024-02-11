@@ -48,8 +48,6 @@ export const MapPhoto = ({ media, zoom, rotation }: { media: any, zoom: number, 
           />
         </div>
         <h3 className="font-medium text-gray-900" style={{ fontSize: zoom, lineHeight: 2+0.03*zoom }}> lol </h3>
-        {/* <h3 className="mt-4 text-sm text-gray-700">Seba</h3>
-        <p className="mt-1 text-lg font-medium text-gray-900">@yo</p> */}
       </a>
     );
 }

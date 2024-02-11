@@ -24,28 +24,31 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
         const { data: media } = supabase.storage.from('gallery').getPublicUrl(path);
         return { ...media, ...item };
     });
-    console.log('res', result)
     return result
 } */
 
 export async function getMedia(query: string) {
     try {
         const cookieStore = cookies()
-        const supabase = createClient(cookieStore);
+        const supabase = createServerComponentClient({ cookies: () => cookieStore });
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
         if (query === '') {
-            const { data: media, error } = await supabase.from("gallery").select()
+            const { data: gallery, error } = await supabase.from("gallery").select().eq('user_id', user?.id)
             if (error) throw error;
-            return media
+            return { gallery, boundaries: null };
         };
         const geojsonString = await getBoundaries(query);
         const geojsonJson = JSON.parse(geojsonString);
-        if (geojsonJson.type === 'Point') {
-            const boundaries: number[] = geojsonJson.boundaries.map(parseFloat);
-            const { data: media, error } = await supabase.from("gallery").select().gte('lat', boundaries[0]).lte('lat', boundaries[1]).gte('lon', boundaries[2]).lte('lon', boundaries[3]);
+        var boundaries: number[] = geojsonJson.boundaries.map(parseFloat);
+        boundaries = [ boundaries[3], boundaries[1], boundaries[2], boundaries[0] ];
+        if (geojsonJson.type !== 'Polygon' && geojsonJson.type !== 'MultiPolygon') {
+            const { data: gallery, error } = await supabase.from("gallery").select().eq('user_id', user?.id).gte('lat', boundaries[0]).lte('lat', boundaries[1]).gte('lon', boundaries[2]).lte('lon', boundaries[3]);
             if (error) throw error;
-            return media;
+            return { gallery, boundaries };
         }
-        const { data: media, error } = await supabase.from("gallery").select()
+        const { data: gallery, error } = await supabase.from("gallery").select().eq('user_id', user?.id)
         if (error) throw error;
         var poly: any;
         if (geojsonJson.type === 'Polygon') {
@@ -53,13 +56,14 @@ export async function getMedia(query: string) {
         } else if (geojsonJson.type === 'MultiPolygon') {
             poly = multiPolygon(geojsonJson.polygon);
         }
-        return media.filter((item) => {
+        const filteredGallery = gallery.filter((item) => {
             const pt = point([item.lon, item.lat]);
             return booleanPointInPolygon(pt, poly);
         });
+        return { gallery: filteredGallery, boundaries };
     }
     catch (error) {
-        return [];
+        return  { gallery: [], boundaries: [] };
     }
 }
 

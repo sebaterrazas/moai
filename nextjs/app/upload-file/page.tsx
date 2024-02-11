@@ -23,9 +23,11 @@ export default function UploadFile() {
         let location: any = null
         try {
           let res = await exifr.parse(e.target.files[i]);
-          console.log('res', res)
           latitude = res.latitude
           longitude = res.longitude
+          if (!latitude || !longitude) {
+            throw new Error('No GPS data found')
+          }
           datetime = res.DateTimeOriginal
           location = await getLocation(latitude, longitude)
         }
@@ -38,7 +40,6 @@ export default function UploadFile() {
             datetime: datetime,
             file: e.target.files[i]
           });
-          console.log('newFiles', newFiles)
         }
       }
       setFiles((prevState: any[]) => [...prevState, ...newFiles]);
@@ -156,7 +157,17 @@ export default function UploadFile() {
             ref={inputRef}
             type="file"
             multiple={true}
-            onChange={handleChange}
+            onChange={(e) => {
+              try {
+                handleChange(e);
+              } catch (error: any) {
+                setUploadMsg(error.message);
+                setTimeout(() => {
+                  setUploadMsg("");
+                }
+                , 3000);
+              }
+            }}
             /* accept="image/*, video/*" */ /* Commented out because it caused problems with Android Web */
           />
         </label>

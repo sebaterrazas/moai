@@ -17,10 +17,9 @@ export default function Avatar({user} : {user?: any}) {
             </Link>
         ) : (
             <Link
-            href="/login"
-            className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
+                href="/login"
             >
-                <FaCircleUser className="text-2xl" />
+                <FaCircleUser className="text-background bg-foreground w-10 h-10 rounded-full transition-transform focus:scale-125 hover:scale-125" />
             </Link>
         )}
     </div>

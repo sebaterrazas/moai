@@ -23,7 +23,7 @@ export const Navbar = ({user} : {user?: any}) => {
     <nav>
         {false ?
             <button
-                className="items-center justify-center bg-background p-1 m-3 text-2xl text-text rounded-xl hover:scale-110 transition-transform"
+                className="items-center justify-center bg-background p-1 m-3 text-2xl text-foreground rounded-xl hover:scale-110 transition-transform"
                 onClick={() => setIsMenuOpen(true)}
             >
                 <GiHamburgerMenu />
@@ -31,7 +31,7 @@ export const Navbar = ({user} : {user?: any}) => {
             :
             <div className="bg-background rounded-lg w-full h-full flex flex-col justify-start items-center p-3 pb-5 text-sm gap-10 animate-in">
                 <button
-                    className="inline-flex items-center justify-center gap-1 px-2 text-text rounded-lg hover:scale-110 transition-transform flex-row"
+                    className="inline-flex items-center justify-center gap-1 px-2 text-foreground rounded-lg hover:scale-110 transition-transform flex-row"
                     onClick={() => setIsMenuOpen(false)}
                 >
                     <h1 className="sr-only">Moais Marauders</h1>

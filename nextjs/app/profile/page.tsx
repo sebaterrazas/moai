@@ -43,7 +43,7 @@ export default async function Profile() {
             <span>{user.user_metadata.full_name}</span>
             <span>{user.user_metadata.email}</span>
             <form action={signOut}>
-                <button className="py-2 px-4 rounded-md no-underline bg-red-600 text-btn-background hover:bg-red-500">
+                <button className="py-2 px-4 rounded-md no-underline bg-red-600 text-white hover:bg-red-500">
                     Logout
                 </button>
             </form>
