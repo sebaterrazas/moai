@@ -6,7 +6,7 @@ import { FaXmark } from "react-icons/fa6";
 import exifr from 'exifr'
 import { getLocation, uploadMedia } from "@/lib/actions";
 
-export default function UploadFile() {
+export default function ViewFile() {
   const [dragActive, setDragActive] = useState<boolean>(false);
   const inputRef = useRef<any>(null);
   const [files, setFiles] = useState<any>([]);
@@ -144,7 +144,7 @@ export default function UploadFile() {
         >
           <polyline points="15 18 9 12 15 6" />
         </svg>{" "}
-        Back
+        Home
       </Link>
 
       <div className="w-1/2">

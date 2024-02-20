@@ -2,7 +2,9 @@
 import { useRouter } from 'next/navigation'
 import { useDebouncedCallback } from 'use-debounce'
 
-export const SearchBar = ({ term }: { term?: string }) => {
+import { BiSolidSlideshow } from "react-icons/bi";
+
+export default ({ term }: { term?: string }) => {
   const { push } = useRouter()
   const handleSearch = useDebouncedCallback((searchTerm: string) => {
     const params = new URLSearchParams(location.search)
@@ -25,9 +27,16 @@ export const SearchBar = ({ term }: { term?: string }) => {
           name="searchField"
           defaultValue={typeof term === 'string' ? decodeURI(term) : ''}
           autoComplete="off"
-          className="block w-full p-4 pl-10 text-sm text-gray-600 placeholder-gray-400 border rounded-2xl focus:border"
+          className="block w-full p-4 pl-10 pr-10 text-sm text-gray-600 placeholder-gray-400 border rounded-2xl focus:border"
           onChange={(evt) => handleSearch(evt.target.value)}
         />
+        {term && 
+          <button>
+            <BiSolidSlideshow
+              className="absolute top-4 right-4 w-5 h-5 text-foreground transition-transform focus:scale-125 hover:scale-125"
+            />
+          </button>
+        }
       </div>
     </form>
   )

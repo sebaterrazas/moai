@@ -5,6 +5,8 @@ import { useState } from 'react';
 
 import classes from "./Map.module.css";
 
+import placeholder from '@/public/polaroid_placeholder.png'
+
 function cn(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
@@ -16,24 +18,17 @@ export const MapPhoto = ({ media, zoom, rotation }: { media: any, zoom: number, 
     <a href="#" className={classes.photoContainer} style={{ transform: `rotate(${rotation}deg)`, transition: 'transform 0.3s ease-in-out' }}>
         <div className="bg-gray-200 overflow-hidden" style={{ marginTop: `${zoom}px`, marginLeft: `${zoom}px`, marginRight: `${zoom}px`, width: `${10 * zoom}px`, height: `${10 * zoom}px`, position: "relative" }}>
           {isLoading && (
-            <div
-              style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  backgroundColor: '#ccc', // Placeholder background color
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-              }}
-            >
-              Loading...
-            </div>
+            <Image
+              alt={"placeholder"}
+              fill
+              sizes="(max-width: 220px) 100vw, (max-width: 220px) 50vw, 33vw"
+              style={{ objectFit: "cover" }}
+              src={placeholder}
+              className={'group-hover:opacity-75 duration-700 ease-in-out grayscale-0 blur-0 scale-100'}
+            />
           )}
           <Image
-            alt={media.location || "placeholder"}
+            alt={media.location || "location"}
             fill
             sizes="(max-width: 220px) 100vw, (max-width: 220px) 50vw, 33vw"
             style={{ objectFit: "cover" }}
