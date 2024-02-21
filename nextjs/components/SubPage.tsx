@@ -28,7 +28,7 @@ export default function SubPage( { children } : { children: React.ReactNode }) {
         >
           <polyline points="15 18 9 12 15 6" />
         </svg>{" "}
-        Back
+        Home
       </Link>
 
         {children}

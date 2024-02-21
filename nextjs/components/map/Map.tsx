@@ -20,7 +20,7 @@ const geojson: FeatureCollection<Point> = {
   features: [],
 };
 
-export const MapComponent = ({ gallery, bounds }: { gallery: any[], bounds: number[] | null }) => {
+export default ({ gallery, bounds, setIsLoading }: { gallery: any[], bounds: number[] | null, setIsLoading: Function }) => {
 
   /* const [viewport, setViewport] = useState({
     latitude: 52.6376,
@@ -110,6 +110,7 @@ export const MapComponent = ({ gallery, bounds }: { gallery: any[], bounds: numb
         minZoom={1}
         reuseMaps
         onZoom={(e) => { setZoom(e.viewState.zoom); }}
+        onLoad={() => setIsLoading(false)}
       >
         <GeolocateControl position="bottom-right" />
         {/* <Source

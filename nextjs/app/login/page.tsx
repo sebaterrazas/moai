@@ -99,7 +99,7 @@ export default function Login({
         >
           <polyline points="15 18 9 12 15 6" />
         </svg>{" "}
-        Back
+        Home
       </Link>
       <form
         className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"

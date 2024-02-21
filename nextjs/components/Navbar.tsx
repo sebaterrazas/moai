@@ -9,16 +9,19 @@ import { SiGithub as Github, SiDiscord as Discord } from 'react-icons/si'
 import { FaFileUpload } from "react-icons/fa";
 import { MdCreateNewFolder } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { IoIosAlbums } from "react-icons/io";
 
 import moai from '@/public/icon.png'
+import UploadFiles from './UploadFiles';
 
 const irish_grover = Irish_Grover({
     subsets: ["latin"],
     weight: ["400"]
 })
 
-export const Navbar = ({user} : {user?: any}) => {
+export default ({ isLoading, files, setFiles, setPopUp } : {isLoading?: boolean, files: any[], setFiles: Function, setPopUp: Function }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     return (
     <nav>
         {false ?
@@ -29,10 +32,10 @@ export const Navbar = ({user} : {user?: any}) => {
                 <GiHamburgerMenu />
             </button>
             :
-            <div className="bg-background rounded-lg w-full h-full flex flex-col justify-start items-center p-3 pb-5 text-sm gap-10 animate-in">
+            <div className={"bg-background flex flex-col items-center text-sm gap-10 rounded-lg transition-all duration-300 " + (isLoading ? "h-screen w-screen justify-center" : "h-full w-full justify-start p-3 pb-5")}>
                 <button
                     className="inline-flex items-center justify-center gap-1 px-2 text-foreground rounded-lg hover:scale-110 transition-transform flex-row"
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => null }
                 >
                     <h1 className="sr-only">Moais Marauders</h1>
                     <Image
@@ -47,15 +50,17 @@ export const Navbar = ({user} : {user?: any}) => {
                     </div>
                 </button>
 
-                <div className="flex flex-row w-full justify-around">
-                    <a href="/upload-file/" rel="noopener noreferrer">
-                    <FaFileUpload className="text-2xl transition-transform focus:scale-125 hover:scale-125" />
-                    </a>
-
-                    <a href="/create-album/" rel="noopener noreferrer">
-                    <MdCreateNewFolder className="text-3xl transition-transform focus:scale-125 hover:scale-125" />
-                    </a>
-                </div>
+                { !isLoading &&
+                    <div className="flex flex-row w-full justify-around">
+                        <UploadFiles files={files} setFiles={setFiles} setUploadMsg={setPopUp} />
+                        {/* <a href="/album/create/" rel="noopener noreferrer">
+                            <MdCreateNewFolder className="text-3xl transition-transform focus:scale-125 hover:scale-125" />
+                        </a> */}
+                        <a href="/gallery" rel="noopener noreferrer">
+                            <IoIosAlbums className="text-3xl transition-transform focus:scale-125 hover:scale-125" />
+                        </a>
+                    </div>
+                }
             </div>
         }
     </nav>
