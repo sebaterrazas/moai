@@ -3,9 +3,15 @@
 import exifr from 'exifr'
 import { FaFileUpload } from "react-icons/fa";
 import { getLocation, uploadMedia } from "@/lib/actions";
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
+import { Text, Box } from '@chakra-ui/react'
 
-export default function UploadFile ({ files, setFiles, setUploadMsg }: { files: any[], setFiles: Function, setUploadMsg: Function }) {
+import { MainContext } from './MainView';
+
+export default function UploadFile ({ }: { }) {
+
+    const mainContext = useContext(MainContext)
+    const { files, setFiles, setPopUp } = mainContext
 
     async function handleChange(e: any) {
         e.preventDefault();
@@ -54,16 +60,16 @@ export default function UploadFile ({ files, setFiles, setUploadMsg }: { files: 
                 await uploadMedia(data);
             });
             setFiles([]);
-            setUploadMsg("Files uploaded successfully");
+            setPopUp("Files uploaded successfully");
             setTimeout(() => {
-                setUploadMsg("");
+                setPopUp("");
             }, 3000);
         }
         catch (error) {
             console.error(error);
-            setUploadMsg("Error uploading files");
+            setPopUp("Error uploading files");
             setTimeout(() => {
-                setUploadMsg("");
+                setPopUp("");
             }, 3000);
         }
     }
@@ -76,25 +82,28 @@ export default function UploadFile ({ files, setFiles, setUploadMsg }: { files: 
 
     return (
         <label className="cursor-pointer">
-            <FaFileUpload className="text-2xl transition-transform focus:scale-125 hover:scale-125" />
-            <input
-                placeholder="fileInput"
-                className="hidden"
-                type="file"
-                multiple={true}
-                onChange={(e) => {
-                try {
-                    handleChange(e);
-                } catch (error: any) {
-                    setUploadMsg(error.message);
-                    setTimeout(() => {
-                    setUploadMsg("");
+            <Box className="flex flex-row gap-4 p-2 hover:bg-highlight focus:bg-highlight">
+                <Text>Upload Photo or Video</Text>
+                <FaFileUpload className="text-2xl transition-transform focus:scale-125 hover:scale-125" />
+                <input
+                    placeholder="fileInput"
+                    className="hidden"
+                    type="file"
+                    multiple={true}
+                    onChange={(e) => {
+                    try {
+                        handleChange(e);
+                    } catch (error: any) {
+                        setPopUp(error.message);
+                        setTimeout(() => {
+                        setPopUp("");
+                        }
+                        , 3000);
                     }
-                    , 3000);
-                }
-                }}
-                /* accept="image/*, video/*" */ /* Commented out because it caused problems with Android Web */
-            />
+                    }}
+                    /* accept="image/*, video/*" */ /* Commented out because it caused problems with Android Web */
+                />
+            </Box>
         </label>
     )
 }

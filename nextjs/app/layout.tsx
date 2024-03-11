@@ -2,6 +2,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from 'next'
 
 import SupabaseProvider from './supabase-provider';
+import { Providers } from './providers'
 
 import "./globals.css";
 
@@ -44,7 +45,9 @@ export default function RootLayout({
       <body className="bg-background text-foreground overflow-hidden">
         <main className="min-h-screen flex flex-col items-center">
           <SupabaseProvider>
-            {children}
+            <Providers>
+              {children}
+            </Providers>
           </SupabaseProvider>
         </main>
       </body>

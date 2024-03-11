@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 
 import Map, { Source, Layer, GeolocateControl, Marker } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -14,49 +14,19 @@ import { MapPhoto } from './MapPhoto';
 import {clusterLayer, clusterCountLayer, unclusteredPointLayer} from './layers';
 
 import classes from "./Map.module.css";
+import { MainContext } from '../MainView';
 
-const geojson: FeatureCollection<Point> = {
-  type: 'FeatureCollection',
-  features: [],
-};
+export default ({ setIsLoading }: { setIsLoading: Function }) => {
 
-export default ({ gallery, bounds, setIsLoading }: { gallery: any[], bounds: number[] | null, setIsLoading: Function }) => {
+  const mainContext = useContext(MainContext);
 
-  /* const [viewport, setViewport] = useState({
-    latitude: 52.6376,
-    longitude: -1.135171,
-    width: "100vw",
-    height: "100vh",
-    zoom: 12
-  }); */
+  const gallery = mainContext.gallery;
+  const bounds = mainContext.boundaries;
 
   const mapRef = useRef<any>(null);
 
   const [zoom, setZoom] = useState(2);
   const [rotationList, setRotationList] = useState<number[]>([]);
-
-  /* useEffect(() => {
-    if (rotationList.length > 0 && geojson.features.length == 0) {
-      gallery.forEach((item, index) => {
-        const longitude = item.lon;
-        const latitude = item.lat;   
-        // Create a new feature and add it to the features array
-        const feature: Feature<Point, GeoJsonProperties> = {
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [longitude, latitude],
-          },
-          properties: {
-            index,
-            media: item,
-            cluster: false,
-          },
-        };
-        geojson.features.push(feature);
-      });
-    }
-  }, [gallery]); */
 
   useEffect(() => {
     // Generate an array of random rotation values for each item in the gallery
@@ -65,9 +35,9 @@ export default ({ gallery, bounds, setIsLoading }: { gallery: any[], bounds: num
   }, [gallery]); 
 
   useEffect(() => {
-    if (mapRef.current && bounds?.length) {
+    if (mapRef.current && bounds.length > 0) {
       mapRef.current.fitBounds(bounds, {
-        padding: {top: 10, bottom:25, left: 15, right: 5}
+        padding: {top: 10, bottom: 25, left: 15, right: 5}
       });
     }
   }, [bounds]);
@@ -99,18 +69,31 @@ export default ({ gallery, bounds, setIsLoading }: { gallery: any[], bounds: num
 
   const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
+  interface InitialViewState {
+    bounds?: [number, number, number, number];
+    longitude?: number;
+    latitude?: number;
+    zoom?: number;
+  }
+
+  const initialViewState: InitialViewState = bounds.length > 0 ? { 
+    bounds: [bounds[2], bounds[1], bounds[0], bounds[3]],
+  } : { 
+    longitude: -70, latitude: -10, zoom: 2 
+  };
+
   return (
       <Map
         ref={mapRef}
         mapboxAccessToken={mapboxToken}
         mapStyle="mapbox://styles/sebaterrazas/cls4qvp23027v01p562pf6pch"
         style={{ height: "100dvh" }}
-        initialViewState={{ longitude: -70, latitude: -10, zoom: 2 }}
+        initialViewState={initialViewState}
         maxZoom={20}
         minZoom={1}
         reuseMaps
         onZoom={(e) => { setZoom(e.viewState.zoom); }}
-        onLoad={() => setIsLoading(false)}
+        onLoad={(e) => { setZoom(e.target.transform.tileZoom); setIsLoading(false); }} // Si existe
       >
         <GeolocateControl position="bottom-right" />
         {/* <Source

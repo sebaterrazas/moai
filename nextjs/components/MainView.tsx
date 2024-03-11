@@ -1,9 +1,30 @@
 'use client';
 
-import React, { useState } from 'react'
+import React, { Suspense, createContext, useState } from 'react';
+import Logo from './Logo';
+import { SkeletonCircle } from '@chakra-ui/react';
+
+type MainContextType = {
+  gallery: any[];
+  boundaries: any[];
+  files: any[];
+  popUp: string;
+  setFiles: Function;
+  setPopUp: Function;
+};
+
+const defaultValue: MainContextType = {
+  gallery: [],
+  boundaries: [],
+  files: [],
+  popUp: "",
+  setFiles: () => {},
+  setPopUp: () => {},
+};
+
+export const MainContext = createContext(defaultValue);
 
 const MapComponent = React.lazy(() => import('@/components/map/Map'));
-const Navbar = React.lazy(() => import('@/components/Navbar'));
 const SearchBar = React.lazy(() => import('@/components/SearchBar'));
 const Avatar = React.lazy(() => import('@/components/Avatar'));
 
@@ -44,6 +65,7 @@ export default ({gallery, boundaries, query, user} : {gallery: any[], boundaries
       }
 
     return (
+      <MainContext.Provider value={{ gallery, boundaries, files, popUp, setFiles, setPopUp }}>
         <main 
             className="flex-1 flex" 
             onDragEnter={handleDragEnter}
@@ -52,11 +74,18 @@ export default ({gallery, boundaries, query, user} : {gallery: any[], boundaries
             onDragLeave={handleDragLeave}
             onDragOver={handleDragOver}
         >
-          <MapComponent gallery={gallery} bounds={boundaries} setIsLoading={setIsLoading}/>
-          <div className={`absolute top-0 left-0 w-full flex flex-row justify-between ${!isLoading && "p-3"}`}>
-            <Navbar isLoading={isLoading} files={files} setFiles={setFiles} setPopUp={setPopUp} />
-            <SearchBar term={query} />
-            <Avatar user={user} />
+          <MapComponent setIsLoading={setIsLoading}/>
+          {isLoading && 
+            <div className="absolute top-0 left-0 w-full h-full flex flex-row justify-center items-center bg-background bg-opacity-90">
+              <Logo />
+            </div>
+          }
+          <div className={`absolute top-0 left-0 w-full flex flex-row justify-between align-center p-3`}>
+            <SearchBar term={query} isGallery={gallery.length > 0} />
+            <Suspense fallback={<div className="py-2" ><SkeletonCircle size="10"/></div>}>
+              <Avatar user={user} />
+            </Suspense>
           </div>
         </main>
+      </MainContext.Provider>
 )}

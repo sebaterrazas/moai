@@ -2,10 +2,9 @@
 import { useRouter } from 'next/navigation'
 import { useDebouncedCallback } from 'use-debounce'
 
-import Hamburger from './Hamburger';
-import Presentation from './Presentation';
+import { BiSolidSlideshow } from "react-icons/bi";
 
-export default ({ term, isGallery }: { term?: string, isGallery: boolean }) => {
+export default ({ term }: { term?: string }) => {
   const { push } = useRouter()
   const handleSearch = useDebouncedCallback((searchTerm: string) => {
     const params = new URLSearchParams(location.search)
@@ -15,27 +14,29 @@ export default ({ term, isGallery }: { term?: string, isGallery: boolean }) => {
       params.delete('search')
     }
     push(`/?${params.toString()}`)
-  }, 300)
+  }, 500)
   return (
     <form onSubmit={(e) => e.preventDefault()} className="flex-1 px-2">
-      <div className="relative max-w-xl mx-auto justify-center">
-        <Hamburger />
+      <div className="relative max-w-xl mx-auto">
+        <MagnifyingGlass
+          className="absolute top-4 left-4 w-5 h-5 text-gray-600 pointer-events-none"
+          aria-hidden
+        />
         <input
           type="search"
           name="searchField"
-          placeholder='Filter by a location...'
           defaultValue={typeof term === 'string' ? decodeURI(term) : ''}
           autoComplete="off"
-          className="block w-full h-15 p-4 pl-12 pr-16 text-md text-gray-600 placeholder-gray-400 border rounded-2xl focus:border"
+          className="block w-full p-4 pl-10 pr-10 text-sm text-gray-600 placeholder-gray-400 border rounded-2xl focus:border"
           onChange={(evt) => handleSearch(evt.target.value)}
         />
-        {isGallery && 
-          <Presentation location={term} />
+        {term && 
+          <button>
+            <BiSolidSlideshow
+              className="absolute top-4 right-4 w-5 h-5 text-foreground transition-transform focus:scale-125 hover:scale-125"
+            />
+          </button>
         }
-        <MagnifyingGlass
-          className="absolute top-5 right-4 w-5 h-5 text-gray-600 pointer-events-none"
-          aria-hidden
-        />
       </div>
     </form>
   )
