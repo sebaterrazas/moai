@@ -4,7 +4,7 @@ import SearchBar from '@/components/SearchBar';
 export default function FilterFiles({ files, setFiles }: { files: any, setFiles: any }) {
     return (
         <div className='w-full justify-content'>
-            <SearchBar term={''} />
+            {/* <SearchBar term={''} /> */}
             <div date-rangepicker className="w-full my-4 flex flex-row items-center justify-center">
                 <div className="relative">
                     <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">

@@ -7,7 +7,7 @@ import exifr from 'exifr'
 import { getLocation, uploadMedia, getMedia } from "@/lib/actions";
 import FilesGrid from "@/components/FilesGrid";
 import SearchBar from "@/components/SearchBar";
-import FilterFiles from "@/components/FilterFiles";
+/* import FilterFiles from "@/components/FilterFiles"; */
 
 export default function CreateAlbum() {
   const [files, setFiles] = useState<any>([]);
