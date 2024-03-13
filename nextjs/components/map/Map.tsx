@@ -93,7 +93,7 @@ export default ({ setIsLoading }: { setIsLoading: Function }) => {
         minZoom={1}
         reuseMaps
         onZoom={(e) => { setZoom(e.viewState.zoom); }}
-        onLoad={(e) => { setZoom(e.target.transform.tileZoom); setIsLoading(false); }} // Si existe
+        onLoad={(e) => { setZoom(e.target.getZoom()); setIsLoading(false); }}
       >
         <GeolocateControl position="bottom-right" />
         {/* <Source
@@ -115,7 +115,6 @@ export default ({ setIsLoading }: { setIsLoading: Function }) => {
               <button
                 type="button"
                 className="cursor-pointer"
-                // onClick={(e) => zoomToSelectedLoc(e, item, index)}
               >
                 {<MapPhoto media={item} zoom={zoom} rotation={rotationList[index]}/>}
               </button>

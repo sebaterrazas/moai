@@ -28,6 +28,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 } */
 
 export async function getMedia(query: string) {
+    "use server";
     try {
         const cookieStore = cookies()
         const supabase = createServerComponentClient({ cookies: () => cookieStore });
@@ -43,6 +44,9 @@ export async function getMedia(query: string) {
         const geojsonJson = JSON.parse(geojsonString);
         var boundaries: number[] = geojsonJson.boundaries.map(parseFloat);
         boundaries = [ boundaries[3], boundaries[1], boundaries[2], boundaries[0] ];
+        if (!user) {
+            return { gallery: [], boundaries: boundaries };
+        }
         if (geojsonJson.type !== 'Polygon' && geojsonJson.type !== 'MultiPolygon') {
             const { data: gallery, error } = await supabase.from("gallery").select().eq('user_id', user?.id).gte('lat', boundaries[0]).lte('lat', boundaries[1]).gte('lon', boundaries[2]).lte('lon', boundaries[3]);
             if (error) throw error;
@@ -102,6 +106,7 @@ export async function uploadMedia(data: any) {
 // Map functions
 
 export async function getBoundaries(query: string): Promise<string> {
+    "use server";
     const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&polygon_geojson=1&q=${query}`;
     try {
         const response = await fetch(url, {
@@ -118,6 +123,7 @@ export async function getBoundaries(query: string): Promise<string> {
 }
 
 export async function getLocation(latCoordinates: number, lonCoordinates: number): Promise<string> {
+    "use server";
     const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latCoordinates}&lon=${lonCoordinates}&zoom=18`;
     try {
         const response = await fetch(url, {
@@ -140,7 +146,7 @@ export const signOut = async () => {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
     await supabase.auth.signOut();
-    return redirect("/login");
+    return redirect("/");
 };
 
 export const getUser = async () => {

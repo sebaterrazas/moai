@@ -1,7 +1,6 @@
 'use client';
 
 import { useSupabase } from '@/app/supabase-provider';
-import { getURL } from '@/utils/helpers';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 
@@ -22,13 +21,21 @@ export default function AuthUI() {
           variables: {
             default: {
               colors: {
-                brand: '#404040',
-                brandAccent: '#52525b'
-              }
+                brand: 'green',
+                brandAccent: '#388E3C',
+                brandButtonText: 'hsl(var(--background))',
+                defaultButtonText: 'hsl(var(--foreground))',
+
+/*              dividerBackground: 'black',
+                inputBackground: 'transparent',
+                inputBorder: 'gray',
+                inputText: 'black',
+                inputPlaceholder: 'darkgray', */
+              },
+
             }
           }
         }}
-        theme=""
       />
     </div>
   );
