@@ -6,6 +6,8 @@ WIP
 
 ### Next.js
 
+[View Webapp](https://moais-marauders.vercel.app)
+
 ### Flutter
 Not functional yet
 
