@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { FaCircleUser } from "react-icons/fa6";
 
 import {
@@ -10,15 +9,10 @@ import {
     MenuDivider
   } from '@chakra-ui/react'
 
-import { signOut } from "@/lib/actions";
 import AuthUI from "./AuthUI";
+import LogoutButton from "./LogoutButton";
 
 export default function Avatar({user} : {user?: any}) {
-
-    const handleSignOut = async () => {
-        await signOut();
-    };
-    
     return (
         <div className="py-2">
             {user ? (
@@ -40,11 +34,9 @@ export default function Avatar({user} : {user?: any}) {
                             <MenuItem>Docs</MenuItem>
                             <MenuItem>FAQ</MenuItem>
                         </MenuGroup>
-                            <div className="flex justify-center mt-3 w-full">
-                                <div onClick={handleSignOut} className="py-2 px-4 rounded-md no-underline bg-red-600 text-white hover:bg-red-500 cursor-pointer">
-                                    Logout
-                                </div>
-                            </div>
+                        <div className="flex justify-center mt-3 w-full">
+                            <LogoutButton user={user}/>
+                        </div>
                     </MenuList>
                 </Menu>
             ) : (
