@@ -38,7 +38,7 @@ export async function getMedia(query: string) {
         if (query === '') {
             const { data: gallery, error } = await supabase.from("gallery").select().eq('user_id', user?.id)
             if (error) throw error;
-            return { gallery, boundaries: null };
+            return { gallery, boundaries: [] };
         };
         const geojsonString = await getBoundaries(query);
         const geojsonJson = JSON.parse(geojsonString);

@@ -2,7 +2,8 @@
 
 import { useRef, useState, useEffect, useContext } from 'react';
 
-import Map, { Source, Layer, GeolocateControl, Marker } from "react-map-gl";
+import Map, { Source, Layer, GeolocateControl, Marker, useMap } from "react-map-gl";
+
 import "mapbox-gl/dist/mapbox-gl.css";
 
 import type {FeatureCollection} from 'geojson';
@@ -82,11 +83,32 @@ export default ({ setIsLoading }: { setIsLoading: Function }) => {
     longitude: -70, latitude: -10, zoom: 2 
   };
 
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const handleChange = (e: any) => {
+      setIsDarkMode(e.matches);
+    };
+
+    setIsDarkMode(darkModeMediaQuery.matches);
+    darkModeMediaQuery.addEventListener('change', handleChange);
+
+    return () => darkModeMediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.setConfigProperty('basemap', 'lightPreset', isDarkMode ? 'night' : 'day')
+    }
+  }, [mapRef.current, isDarkMode]);
+
   return (
       <Map
         ref={mapRef}
         mapboxAccessToken={mapboxToken}
-        mapStyle="mapbox://styles/sebaterrazas/cls4qvp23027v01p562pf6pch"
+        mapStyle="mapbox://styles/mapbox/standard"
         style={{ height: "100dvh" }}
         initialViewState={initialViewState}
         maxZoom={20}
@@ -94,6 +116,13 @@ export default ({ setIsLoading }: { setIsLoading: Function }) => {
         reuseMaps
         onZoom={(e) => { setZoom(e.viewState.zoom); }}
         onLoad={(e) => { setZoom(e.target.getZoom()); setIsLoading(false); }}
+        light={
+          {
+            anchor: 'viewport',
+            color: 'white',
+            intensity: 0.5
+          }
+        }
       >
         <GeolocateControl position="bottom-right" />
         {/* <Source
