@@ -154,7 +154,6 @@ export const getUser = async () => {
     const cookieStore = cookies();
     const supabase = createServerComponentClient({ cookies: () => cookieStore });
     const result = await supabase.auth.getUser();
-    console.log(result);
     const {
         data: { user },
     } = result

@@ -12,6 +12,11 @@ export default function AuthUI() {
         supabaseClient={supabase}
         providers={['google']}
         magicLink={false}
+        queryParams={{
+            access_type: 'offline',
+            prompt: 'consent',
+        }}
+        redirectTo={process.env.NEXT_PUBLIC_SITE_URL + '/auth/callback'}
         appearance={{
           theme: ThemeSupa,
           variables: {
@@ -19,7 +24,7 @@ export default function AuthUI() {
               colors: {
                 brand: 'green',
                 brandAccent: '#388E3C',
-                brandButtonText: 'hsl(var(--foreground))',
+                brandButtonText: 'white',
                 defaultButtonText: 'hsl(var(--foreground))',
                 defaultButtonBackground: 'hsl(var(--background))',
                 defaultButtonBackgroundHover: 'hsl(var(--highlight))',

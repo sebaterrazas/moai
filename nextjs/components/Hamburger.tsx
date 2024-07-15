@@ -22,8 +22,16 @@ import { IoIosAlbums } from "react-icons/io";
 import UploadFiles from './UploadFiles';
 import Logo from './Logo';
 
+import { MainContext } from './MainView';
+import { useContext } from "react";
+import { redirect } from 'next/navigation';
+
 export default function Hamburger() {
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const mainContext = useContext(MainContext);
+
+    const { user, setPopUp } = mainContext;
   
     return (
       <>
@@ -44,6 +52,7 @@ export default function Hamburger() {
                 <Logo />
             </DrawerHeader>
             <DrawerBody>
+              <div className={user ? '' : 'cursor-not-allowed'} onClick={() => { if (!user) setPopUp({ status: 'info', message: 'Login to perfom this action', active: true });}}>
                 <Stack spacing='24px'>
                     <UploadFiles />
                     <a className="flex flex-row gap-4 p-2 hover:bg-highlight focus:bg-highlight" href="/albums" rel="noopener noreferrer">
@@ -51,6 +60,7 @@ export default function Hamburger() {
                         <IoIosAlbums className="text-3xl transition-transform focus:scale-125 hover:scale-125" />
                     </a>
                 </Stack>
+              </div>
             </DrawerBody>
   
             <DrawerFooter>

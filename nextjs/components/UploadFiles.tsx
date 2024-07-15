@@ -7,11 +7,12 @@ import { useEffect, useContext } from 'react';
 import { Text, Box } from '@chakra-ui/react'
 
 import { MainContext } from './MainView';
+import { redirect } from 'next/navigation';
 
 export default function UploadFile ({ }: { }) {
 
     const mainContext = useContext(MainContext)
-    const { files, setFiles, setPopUp } = mainContext
+    const { files, setFiles, setPopUp, user } = mainContext;
 
     async function handleChange(e: any) {
         e.preventDefault();
@@ -81,7 +82,7 @@ export default function UploadFile ({ }: { }) {
     }, [files]);
 
     return (
-        <label className="cursor-pointer">
+        <label className={user ? 'cursos-pointer' : 'cursor-not-allowed'}>
             <Box className="flex flex-row gap-4 p-2 hover:bg-highlight focus:bg-highlight">
                 <Text>Upload Photo or Video</Text>
                 <FaFileUpload className="text-2xl transition-transform focus:scale-125 hover:scale-125" />
@@ -90,6 +91,12 @@ export default function UploadFile ({ }: { }) {
                     className="hidden"
                     type="file"
                     multiple={true}
+                    onClick={(e) => {
+                        if (!user) {
+                            e.preventDefault();
+                            redirect('/?message=Login to use services');
+                        }
+                    }}
                     onChange={(e) => {
                     try {
                         handleChange(e);

@@ -1,3 +1,5 @@
+
+
 import { FaCircleUser } from "react-icons/fa6";
 
 import {
@@ -11,8 +13,13 @@ import {
 
 import AuthUI from "./AuthUI";
 import LogoutButton from "./LogoutButton";
+import { MainContext } from './MainView';
+import { useContext } from "react";
 
-export default function Avatar({user} : {user?: any}) {
+export default function Avatar() {
+    const mainContext = useContext(MainContext);
+
+    const user = mainContext.user;
     return (
         <div className="py-2">
             {user ? (
@@ -41,11 +48,6 @@ export default function Avatar({user} : {user?: any}) {
                 </Menu>
             ) : (
                 <Menu>
-                {/* <Link
-                    href="/login"
-                >
-                    <FaCircleUser className="text-background bg-foreground w-10 h-10 rounded-full transition-transform focus:scale-125 hover:scale-125" />
-                </Link> */}
                     <MenuButton>
                         <FaCircleUser className="text-background bg-foreground w-10 h-10 rounded-full transition-transform focus:scale-125 hover:scale-125" />
                     </MenuButton>

@@ -3,10 +3,6 @@ import { headers, cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-import { getURL } from '@/utils/helpers';
-
-import AuthUI from "../../components/AuthUI";
-
 export default function Login({
   searchParams,
 }: {
